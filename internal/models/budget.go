@@ -1,15 +1,15 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Budget struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	UserID    int       `gorm:"not null;index" json:"user_id"`                          // Идентификатор пользователя
-	Amount    float64   `gorm:"not null;type:decimal(10,2)" json:"amount"`              // Сумма месячного бюджета
-	Month     int       `gorm:"not null;check:month >= 1 AND month <= 12" json:"month"` // Номер месяца от 1 до 12
-	Year      int       `gorm:"not null" json:"year"`                                   // Год бюджета
-	CreatedAt time.Time `json:"created_at"`                                             // Дата и время создания бюджета
-	UpdatedAt time.Time `json:"updated_at"`                                             // Дата и время последнего обновления бюджета
+	gorm.Model
+	UserID int     `gorm:"not null;index" json:"user_id"`                          // Идентификатор пользователя
+	Amount float64 `gorm:"not null;type:decimal(10,2)" json:"amount"`              // Сумма месячного бюджета
+	Month  int     `gorm:"not null;check:month >= 1 AND month <= 12" json:"month"` // Номер месяца от 1 до 12
+	Year   int     `gorm:"not null" json:"year"`                                   // Год бюджета
 
 	// Связи
 	User User `gorm:"foreignKey:UserID" json:"-"` // Пользователь владелец бюджета

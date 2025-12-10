@@ -1,14 +1,14 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
-	ID        int       `gorm:"primaryKey" json:"id"`
-	Email     string    `gorm:"uniqueIndex;not null" json:"email"`    // Электронная почта пользователя
-	Username  string    `gorm:"uniqueIndex;not null" json:"username"` // Имя пользователя
-	Password  string    `gorm:"not null" json:"-"`                    // Хешированный пароль пользователя
-	CreatedAt time.Time `json:"created_at"`                           // Дата и время создания записи
-	UpdatedAt time.Time `json:"updated_at"`                           // Дата и время последнего обновления записи
+	gorm.Model
+	Email     string `gorm:"uniqueIndex;not null" json:"email"`    // Электронная почта пользователя
+	Username  string `gorm:"uniqueIndex;not null" json:"username"` // Имя пользователя
+	Password  string `gorm:"not null" json:"-"`                    // Хешированный пароль пользователя
 
 	// Связи
 	Expenses          []Expense          `gorm:"foreignKey:UserID" json:"-"` // Все расходы пользователя

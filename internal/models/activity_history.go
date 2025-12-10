@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ActivityType string
 
@@ -19,14 +23,13 @@ const (
 )
 
 type ActivityHistory struct {
-	ID           int          `gorm:"primaryKey" json:"id"`
+	gorm.Model
 	UserID       int          `gorm:"not null;index" json:"user_id"`       // Идентификатор пользователя
 	ActivityType ActivityType `gorm:"not null;index" json:"activity_type"` // Тип действия создание обновление удаление
 	EntityType   string       `gorm:"not null" json:"entity_type"`         // Тип сущности расход категория бюджет регулярный расход
 	EntityID     int          `gorm:"not null" json:"entity_id"`           // Идентификатор сущности над которой выполнено действие
 	Description  string       `json:"description"`                         // Текстовое описание выполненного действия
 	Metadata     string       `gorm:"type:jsonb" json:"metadata"`          // Дополнительные данные действия в формате JSON
-	CreatedAt    time.Time    `json:"created_at"`                          // Дата и время выполнения действия
 
 	// Связи
 	User User `gorm:"foreignKey:UserID" json:"-"` // Пользователь выполнивший действие

@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type RecurringExpenseType string
 
@@ -12,7 +16,7 @@ const (
 )
 
 type RecurringExpense struct {
-	ID          int                  `gorm:"primaryKey" json:"id"`
+	gorm.Model
 	UserID      int                  `gorm:"not null;index" json:"user_id"`             // Идентификатор пользователя
 	CategoryID  int                  `gorm:"not null;index" json:"category_id"`         // Идентификатор категории расхода
 	Amount      float64              `gorm:"not null;type:decimal(10,2)" json:"amount"` // Сумма регулярного расхода
@@ -22,8 +26,6 @@ type RecurringExpense struct {
 	DayOfWeek   *int                 `json:"day_of_week"`                               // День недели для еженедельных расходов от 0 до 6 где 0 воскресенье
 	IsActive    bool                 `gorm:"default:true" json:"is_active"`             // Флаг активности регулярного расхода
 	NextDate    time.Time            `gorm:"not null;index" json:"next_date"`           // Следующая дата автоматического создания расхода
-	CreatedAt   time.Time            `json:"created_at"`                                // Дата и время создания записи
-	UpdatedAt   time.Time            `json:"updated_at"`                                // Дата и время последнего обновления записи
 
 	// Связи
 	User     User     `gorm:"foreignKey:UserID" json:"-"`            // Пользователь владелец регулярного расхода

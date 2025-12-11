@@ -13,6 +13,7 @@ var errUserNil error = errors.New("user is nil")
 type UserRepository interface {
 	List() ([]models.User, error)
 	GetByID(id uint) (*models.User, error)
+	GetByEmail(email string) (*models.User, error)
 	Create(user *models.User) error
 	Update(user *models.User) error
 	Delete(id uint) error
@@ -52,6 +53,23 @@ func (r *gormUserRepository) GetByID(id uint) (*models.User, error) {
 		r.logger.Error("repo.user.get_by_id failed",
 			slog.String("op", "repo.user.get_by_id"),
 			slog.Uint64("id", uint64(id)),
+			slog.String("error", err.Error()),
+		)
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *gormUserRepository) GetByEmail(email string) (*models.User, error) {
+	r.logger.Debug("repo.user.get_by_email",
+		slog.String("op", "repo.user.get_by_email"),
+		slog.String("email", email),
+	)
+	var user models.User
+	if err := r.db.Where("email = ?", email).First(&user).Error; err != nil {
+		r.logger.Error("repo.user.get_by_email failed",
+			slog.String("op", "repo.user.get_by_email"),
+			slog.String("email", email),
 			slog.String("error", err.Error()),
 		)
 		return nil, err

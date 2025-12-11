@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"cashcontrol/internal/config"
 	"cashcontrol/internal/repository"
 	"cashcontrol/internal/services"
 	"log/slog"
@@ -9,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterRoutes(r *gin.Engine, db *gorm.DB, logger *slog.Logger) {
+func RegisterRoutes(r *gin.Engine, db *gorm.DB, logger *slog.Logger, cfg *config.Config) {
 	// Инициализация репозиториев
 	userRepo := repository.NewUserRepository(db, logger)
 	categoryRepo := repository.NewCategoryRepository(db, logger)
@@ -33,6 +34,11 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, logger *slog.Logger) {
 
 	expenseHandler := NewExpenseHandler(expenseService, logger)
 	expenseHandler.RegisterRoutes(r)
+
+	// Auth
+	authService := services.NewAuthService(userRepo, logger, cfg.JWTSecret)
+	authHandler := NewAuthHandler(authService, logger)
+	authHandler.RegisterRoutes(r)
 
 	// TODO: Добавить handlers для Budget, ActivityLog, RecurringExpense если необходимо
 }

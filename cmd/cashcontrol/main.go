@@ -45,7 +45,7 @@ func main() {
 		})
 	})
 
-	handlers.RegisterRoutes(router, database.DB, logger)
+	handlers.RegisterRoutes(router, database.DB, logger, cfg)
 
 	logger.Info("starting server", slog.String("address", cfg.ServerAddress))
 

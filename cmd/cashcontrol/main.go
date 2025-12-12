@@ -7,6 +7,11 @@ import (
 	"cashcontrol/internal/config"
 	"cashcontrol/internal/database"
 	"cashcontrol/internal/handlers"
+	"cashcontrol/internal/repository"
+	"cashcontrol/internal/services"
+	"log/slog"
+	"os"
+
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,14 +41,32 @@ func main() {
 	}()
 
 	// Инициализация маршрутизатора
-	router := gin.Default()
+	router := setupRouter()
 
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Сервер работает",
-			"status":  "ok",
-		})
-	})
+	router.Run(cfg.ServerAddress)
+}
+
+// setupRouter инициализирует все зависимости и настраивает роутер
+func setupRouter() *gin.Engine {
+	// Инициализация logger
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
+
+	// Инициализация репозиториев
+	expenseRepo := repository.NewExpenseRepository(database.DB, logger)
+	budgetRepo := repository.NewBudgetRepository(database.DB, logger)
+
+	// Инициализация сервисов
+	expenseService := services.NewExpenseService(expenseRepo, logger)
+	budgetService := services.NewBudgetService(budgetRepo, expenseRepo, logger)
+
+	// Инициализация handler'ов
+	expenseHandler := handlers.NewExpenseHandler(expenseService, logger)
+	budgetHandler := handlers.NewBudgetHandler(budgetService, logger)
+
+	// Настройка роутера
+	router := gin.Default()
 
 	handlers.RegisterRoutes(router, database.DB, logger, cfg)
 
@@ -62,4 +85,9 @@ func initLogger() *slog.Logger {
 	}
 	handler := slog.NewTextHandler(os.Stdout, opts)
 	return slog.New(handler)
+	// Регистрация роутов handler'ов
+	expenseHandler.RegisterRoutes(router)
+	budgetHandler.RegisterRoutes(router)
+
+	return router
 }

@@ -18,6 +18,8 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, logger *slog.Logger, cfg *config
 	expenseRepo := repository.NewExpenseRepository(db, logger)
 	budgetRepo := repository.NewBudgetRepository(db, logger)
 	recurringExpenseRepo := repository.NewRecurringExpenseRepository(db, logger)
+	_ = repository.NewActivityLogRepository(db, logger)
+	_ = repository.NewRecurringExpenseRepository(db, logger)
 
 	// ---------- services ----------
 	userService := services.NewUserService(userRepo, logger)

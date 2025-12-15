@@ -76,7 +76,7 @@ func (r *gormStatisticsRepository) GetPeriodStatistics(
 		}
 
 		stats.ByCategory = append(stats.ByCategory, models.CategoryStatistics{
-			CategoryID:    int(r.CategoryID),
+			CategoryID:    r.CategoryID,
 			CategoryName:  r.CategoryName,
 			CategoryColor: r.CategoryColor,
 			TotalAmount:   r.TotalAmount,

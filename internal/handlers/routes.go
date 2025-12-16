@@ -69,13 +69,13 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB, logger *slog.Logger, cfg *config
 	recurringExpenseHandler.RegisterRoutes(protected)
 
 	analyticsRepo := repository.NewAnalyticsRepository(db)
-	analyticsService := services.NewAnalyticsService(analyticsRepo)
-	analyticsHandler := NewAnalyticsHandler(analyticsService)
+	analyticsService := services.NewAnalyticsService(analyticsRepo, logger)
+	analyticsHandler := NewAnalyticsHandler(analyticsService, logger)
 	analyticsHandler.RegisterRoutes(protected)
 
 	statsRepo := repository.NewStatisticsRepository(db)
-	statsService := services.NewStatisticsService(statsRepo)
-	statsHandler := NewStatisticsHandler(statsService)
+	statsService := services.NewStatisticsService(statsRepo, logger)
+	statsHandler := NewStatisticsHandler(statsService, logger)
 	statsHandler.RegisterRoutes(protected) 
 
 	// Напоминание записывать расходы (каждый день)

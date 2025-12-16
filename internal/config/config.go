@@ -11,8 +11,6 @@ type Config struct {
 	ServerAddress string
 	DatabaseURL   string
 	Environment   string
-	// UseDatabaseURL определяет, использовать ли DATABASE_URL или отдельные параметры
-	// Автоматически определяется: если DATABASE_URL задан - true, иначе - false
 	UseDatabaseURL bool
 	DBHost           string
 	DBUser           string

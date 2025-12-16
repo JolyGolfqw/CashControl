@@ -35,18 +35,14 @@ func main() {
 		}
 	}()
 
-	// Инициализация маршрутизатора
 	router := setupRouter(cfg, logger)
 
 	router.Run(cfg.ServerAddress)
 }
 
-// setupRouter инициализирует все зависимости и настраивает роутер
 func setupRouter(cfg *config.Config, logger *slog.Logger) *gin.Engine {
-	// Настройка роутера
 	router := gin.Default()
 
-	// CORS middleware
 	router.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -66,7 +62,6 @@ func setupRouter(cfg *config.Config, logger *slog.Logger) *gin.Engine {
 	return router
 }
 
-// initLogger инициализирует структурированный логгер
 func initLogger() *slog.Logger {
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelInfo,
